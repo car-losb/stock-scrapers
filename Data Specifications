@@ -1,0 +1,160 @@
+Structure of Repository:
+
+
+The repository contains 4 csv files containing twitter, reddit, yahoo 2020, and yahoo 2021 stock data respectively as well as the
+cleaned_reddit_twitter_stock database we created containing 4 tables representing the respective csv files. Additionally,
+the code written to extract and clean this data is stored in three python files.
+
+
+Structure of Database:
+
+
+Tables
+
+
+- reddit_posts_with_ticker: displays reddit stock mention volume data between 1/28/2020 and 8/16/2021
+- twitter_posts_with_ticker: displays twitter stock mention data between 4/9/2020 - 7/16/2020
+- yahoo_stocks_2020: displays stock volatility according to yahoo finance between 4/9/2020 - 7/16/2020
+- yahoo_stocks_2021: displays stock volatility according to yahoo finance between 1/28/2020 and 8/16/2021
+
+
+I. Where did table data come from?
+
+
+- Reddit post data was collected from a csv file on the popular subreddit WallStreetBets
+- Twitter post data was collected from the data source Stock Market Tweets Data
+- Yahoo stock performance data was collected from the Yahoo Finance API
+
+
+II. Format of the tables
+
+
+a. Reddit Posts with Ticker
+   - timestamp (key): denotes the date that corresponds to the volume of reddit posts for each respective stock
+       - Type: string
+       - Default: Date and time, time was cleaned off
+       - Range: 1/28/2020 - 8/16/2021
+       - Distribution: Date range
+       - Unique: No
+       - Duplicate Record: N/A
+       - Required: Yes, we need it to track reddit popularity of stocks over time
+       - Analysis: Yes, the timestamp will help observe the relationship between stock mentions and performance over time.
+
+
+   - ticker: each column is represented by a ticker, which corresponds to the abbreviation of each stock
+       - Type: string
+       - Default: N/A
+       - Range: ['GME', 'AAL', 'AAPL', 'AMD', 'APHA', 'BILI',
+                         'CLOV', 'DKNG', 'ECOR', 'FB', 'INO', 'JD', 'MSFT',
+                         'MVIS', 'NAKD', 'PLUG', 'SNDL', 'TLRY', 'TSLA', 'WKHS', 'ZM']
+       - Distribution: N/A
+       - Unique: Yes
+       - Duplicate Record: N/A
+       - Required: Yes, we need it to track respective stock data
+       - Analysis: Yes, the ticker helps associate respective stock data to each stock.
+
+
+   - value: volume of stock mentions in reddit posts on a given date
+       - Type: int
+       - Default: 0
+       - Range: 0,4676
+       - Distribution: Tended to peak towards the end of january and larger peaks observed from larger companies.
+       - Unique: No
+       - Duplicate Record: N/A
+       - Required: Yes, we need it to track stock popularity on reddit
+       - Analysis: Yes, the volume of reddit mentions will help observe the relationship between mentions and performance.
+
+
+
+b. Twitter Posts with Ticker
+   - created_at (key): denotes the date that corresponds to the volume of reddit posts for each respective stock
+       - Type: string
+       - Default: Date and time, time was cleaned off
+       - Range: 4/9/2020 - 7/16/2020
+       - Distribution: Date range
+       - Unique: No
+       - Duplicate Record: N/A
+       - Required: Yes, we need it to track twitter popularity of stocks over time
+       - Analysis: Yes, the created_at value will help observe the relationship between stock mentions and performance over time.
+   - ticker: each column is represented by a ticker, which corresponds to the abbreviation of each stock
+       - Type: string
+       - Default: N/A
+       - Range: ['#SPX500','#SP500','SPX500','$SPX',"$MSFT", "$AAPL", "$AMZN", "$FB", "$BBRK.B", "$GOOG", "$JNJ", "$JPM", "$V",
+                   "$PG", "$MA", "$INTC", "$UNH", "$BAC", "$T", "$HD", "$XOM","$DIS", "$VZ", "$KO", "$MRK", "$CMCSA", "$CVX", "$PEP", "$PFE"]
+       - Distribution: N/A
+       - Unique: Yes
+       - Duplicate Record: N/A
+       - Required: Yes, we need it to track respective stock data
+       - Analysis: Yes, the ticker helps associate respective stock data to each stock.
+   - value: volume of stock mentions in twitter posts on a given date
+       - Type: int
+       - Default: 0
+       - Range: 0,4238
+       - Distribution: Tended to peak in mid June amongst large tech company stocks.
+       - Unique: No
+       - Duplicate Record: N/A
+       - Required: Yes, we need it to track stock popularity on twitter
+       - Analysis: Yes, the volume of twitter mentions will help observe the relationship between mentions and performance.
+
+
+c. Yahoo Stock
+   - Date (key): denotes the date that corresponds to the stock performance for each respective stock
+       - Type: string
+       - Default: Date and time, time was cleaned off
+       - Range: 4/9/2020 - 7/16/2020, 1/28/2020 - 8/16/2021
+       - Distribution: Date range
+       - Unique: No
+       - Duplicate Record: N/A
+       - Required: Yes, we need it to track stock performance over time
+       - Analysis: Yes, the date will help observe the relationship between stock mentions and performance over time.
+
+
+   - ticker: each column is represented by a ticker, which corresponds to the abbreviation of each stock
+        - Type: string
+       - Default: N/A
+       - Range: ['msft', 'aapl', 'tsla', 'amzn', 'meta', 'brk-b', 'goog', 'jnj', 'jpm', 'v', 'pg',
+            'ma', 'intc', 'unh', 'bac', 't', 'hd', 'xom', 'dis', 'vz', 'ko', 'mrk', 'cmcsa',
+            'cvx', 'pep', 'pfe', '^gspc', 'gme', 'aal', 'amd', 'aph', 'bili', 'clov', 'dkng', 'ecor', 'ino', 'jd',
+              'mvis', 'cenn', 'plug', 'sndl', 'tlry', 'tsla', 'wkhs', 'zm']
+       - Distribution: N/A
+       - Unique: Yes
+       - Duplicate Record: N/A
+       - Required: Yes, we need it to track respective stock data
+       - Analysis: Yes, the ticker helps associate respective stock data to each stock.
+
+
+   - value: stock volatility, determined by calculating the percent change in opening and closing price in a stock on a given day
+       - Type: float
+       - Default: 0
+       - Range:
+           - 2020: -10.8, 9.62
+           - 2021: -71.05, 74.56
+       - Distribution: Much wider range in 2021 than 2020, could have also been the stocks used in each year however.
+       - Unique: No
+       - Duplicate Record: N/A
+       - Required: Yes, we need it to track stock volatility.
+       - Analysis: Yes, the volatility of the stock will help observe the relationship between mentions and performance.
+
+
+III. Notes
+   - All of the data we collected related to stocks and public posts made on social media, so none of it seemed to be of
+   sensitive nature.
+
+
+IV. Links to our full data
+
+    Bruno Taborda, Ana de Almeida, José Carlos Dias, Fernando Batista, Ricardo Ribeiro. (2021). "Stock Market Tweets Data." Web.
+    This database was not included in the github because it is 174.5 mb in its raw form and was too large to push to github.
+    https://ieee-dataport.org/open-access/stock-market-tweets-data
+
+    Microsoft Corp. (MSFT) (2013). Profile, business summary. Yahoo!Finance.
+    http://finance.yahoo.com/q/pr?s=MSFT.
+
+    Wall Street bets. (2021).
+    Our reddit data is smaller at roughly 50 mb and was included in the raw databases section of our github.
+
+    Locations of the full raw data:
+
+V. Sample of our data
+
+    https://docs.google.com/spreadsheets/d/1bgyx9CmeeNdbnF2BBCroI4H1slubImD_5nDb3T-yN9U/edit#gid=1049215637

@@ -1,0 +1,319 @@
+John Ryan Byers, Carlos Betancur, Nathan DePiero, Hunter Adrian
+Stock Scraping CS1951A Final Project
+
+Analysis Deliverable Questions
+
+Our hypotheses
+    1) There is a statistical difference between the volatility levels one day after a low number of stock
+        mentions and volatility levels one day after a high number of stock mentions. (Two Sample T-Test)
+    2) There is a significant difference in volatility between one day before and one day after an abnormally
+        high number of stock mentions. (Paired T-test)
+    3) There is a statistical difference between the volatility following a higher number of Twitter stock
+        mentions and the volatility following a high number of Reddit stock mentions. (Two Sample T-test)
+
+Please note that our reference to a high number of stock mentions is one standard deviation above the mean.
+
+Hypothesis I
+    Why did you use this statistical test or ML algorithm? Which other tests did you consider or evaluate? What
+    metric(s) did you use to measure success or failure, and why did you use it? What challenges did you face
+    evaluating the model? Did you have to clean or restructure your data?
+
+        In our first hypothesis, we claimed there will be a statistical difference between the mean stock price
+        volatility one day after a high number of social media mentions and one day after a low number of social
+        media mentions. We defined a high number of social media mentions as any value one standard deviation
+        above the mean number of mentions on Twitter and Reddit. Contrastingly, a low number of mentions would
+        be a value below the mean number of social media mentions. We considered using a Chi-Squared Test initially;
+        however, we wanted to analyze the difference in means between two samples so we used a Two Sample T-Test.
+
+        We used the p-value and the t-statistic returned by our test to measure success or failure.  The p-value
+        is the probability of finding data as extreme or more extreme than what we have observed, given that the
+        null hypothesis is true.  It is not a metric to determine the probability of a null or alternative
+        hypothesis, but we can use it to possibly reject the null hypothesis.  In our model, we also drew as
+        many data points available within Reddit and Twitter time periods for our stocks of interest to increase
+        the reliability of our results.
+
+        The largest challenges facing the evaluation of this model surrounded the restructuring of the data.
+        For our Data Deliverable, we created 4 data tables, two containing mentions for each stock on social media
+        platforms, one for twitter posts and one for reddit comments over separate periods of time. The two other
+        tables contained the Yahoo Finance change in price for each stock across two time periods that matched their
+        respective social media data. Initially we attempted to use a SQL query to isolate two columns, stock
+        volatility the day before and the day after high and low social media mentions. This turned out to be more
+        complicated than expected, so we ultimately extracted this data by manipulating panda dataframes. Another
+        difficulty was accurately merging some of these tables, as the tickers for certain stocks differed across
+        platforms.
+
+        We had to perform additional cleaning on our data by removing duplicates in all four of our tables.  We
+        had missed this task in the Data Deliverable and made sure to address it before any data was used in our
+        statistical tests and models.
+
+    What is your interpretation of the results? Do you accept or deny the hypothesis, or are you satisfied
+    with your prediction accuracy? For prediction projects, we expect you to argue why you got the
+    accuracy/success metric you have. Intuitively, how do you react to the results? Are you confident in the
+    results?
+
+        Our test returned the following results, T-Statistic: 1.371, P-value: 0.171. Since the p-value is not
+        below 0.05 we can not reject the null hypothesis and find that there is no statistically significant
+        difference between stock price volatility one day after a low number of social media mentions and stock
+        price volatility one day after a high number of social media mentions.
+
+        Intuitively, this result made sense to us.  We realized it would be unlikely for Twitter and Reddit posts
+        to have an effect on the stock market.  It is incredibly hard to make predictions about stocks rising or
+        falling in the future.  In addition, the number of posts about stock might be in reference to some other
+        news about a company such as Apple releasing a new product and not necessarily users telling others to
+        buy or sell the stock.
+
+        We are fairly confident with our results.  We collected many thousands of posts on the stock market from
+        both Twitter and Reddit and over the course of two different one year periods.  To gain more confidence
+        we would gather more data from other time periods and possibly other social media sites.
+
+Hypothesis II
+
+    Why did you use this statistical test or ML algorithm? Which other tests did you consider or evaluate?
+    What metric(s) did you use to measure success or failure, and why did you use it? What challenges did
+    you face evaluating the model? Did you have to clean or restructure your data?
+
+        Our hypothesis sought to analyze the difference in mean stock price volatility one day after
+        abnormally high stock mentions were recorded and the mean stock price volatility one day before.
+        We defined abnormally high stock mentions as any recorded value in the Reddit and Twitter data
+        that surpassed the mean number of mentions on each respective platform by at least one standard
+        deviation. We decided to use a Paired T-Test to analyze mean price volatility.  We used the Paired
+        T-Test as opposed to the Two Sample T-Test because we were comparing matched pairs of volatilities
+        one day before and after a day of high mentions which were not independent variables.
+
+        We used the p-value to measure the success of our model, but we took this value with skepticism.
+        This p-value is the probability of obtaining a result equal to or more extreme than an observed
+        result.  Therefore we can not use this value to distinctively state that a high number of social
+        media mentions directly causes stock volatility to change over a few days.
+
+        The challenges we faced evaluating this statistical test mostly revolved around aggregating our
+        data from our database into a usable format.  For this test we needed to find data for one day
+        before and one day after a high number of mentions.  We particularly needed to take into account
+        if a stock was mentioned on the first day in our collected range and that there was data the day
+        before.  We also had to account for dates on weekends and holidays where stocks do not trade and
+        therefore have no data.
+
+        For this test, we removed all duplicates in our data.  All other cleaning was performed in the
+        Data Deliverable.  We did not have to restructure our data for this deliverable, but had to use
+        the Pandas dataframe to extract the data we required.
+
+    What is your interpretation of the results? Do you accept or deny the hypothesis, or are you satisfied
+    with your prediction accuracy? For prediction projects, we expect you to argue why you got the
+    accuracy/success metric you have. Intuitively, how do you react to the results? Are you confident in
+    the results?
+
+        Our test returned the following values, T-statistics:  -2.849, p-value:  0.0047. The p-value in this
+        case rejects the null hypothesis, suggesting the difference in stock price volatility the day before
+        high social media mentions and the day after is statistically significant.
+
+        Despite suggesting statistical significance, neither sample displayed normal distributions nor did
+        the time periods in which Twitter mentions were collected correlate with those on Reddit. Additionally,
+        our model does not take into account what was said in the posts in which the stocks were mentioned.
+        Therefore, we do not know if it was predictions from the users leading to lower volatility levels or
+        other external factors.
+
+        At first we were surprised by the result, not expecting to achieve such a low p-value.  After further
+        research into our results, we found that average volatility before a higher number of social media
+        posts was 4.433 percent change and after the higher number of social media posts the average volatility
+        was 3.032 percent change.  It was unexpected that the average volatility decreased following posts
+        by users.  We had originally anticipated posts encouraging other users to buy, raising the volatility
+        level.  However, the decrease in volatility might have occurred due to a large number of posts after
+        a sharp change in the stock. Then a day later the stock price might have leveled out leading to less
+        volatility.
+
+        Intuitively, it would make sense that social media presence might impact investment patterns
+        among the general public. However, to truly verify the trends we noticed we would have to collect
+        more data. More specifically, collecting data for these stocks across much larger time periods and
+        perhaps even across additional social media platforms.
+
+Hypothesis III
+    Why did you use this statistical test or ML algorithm? Which other tests did you consider or evaluate?
+    What metric(s) did you use to measure success or failure, and why did you use it? What challenges did
+    you face evaluating the model? Did you have to clean or restructure your data?
+
+        For this hypothesis, we claimed there is a statistical difference between the volatility following
+        a higher number of Twitter stock mentions and the volatility following a high number of Reddit stock
+        mentions.
+
+        Similar to our second hypothesis, high social media mentions were defined as any recorded number of
+        mentions in a day above the mean mentions for each respective social media platform by at least one
+        standard deviation. For this test we used mentions of stocks in both Twitter and Facebook which
+        were Apple, Meta, and Microsoft. We knew again that because we were observing mean price volatility,
+        we would want to use some sort of t-test. However, since we are observing data from Reddit and
+        Twitter separately, we decided it would be best to use a Two Sample T-Test, rather than the Paired
+        T-Test used for the second hypothesis.
+
+        Again, the success of our test model depends largely on the t-statistic and p-value that is
+        returned when the test is run. Additionally, we used as much reliable data as we could to align
+        with the assumptions of the Two Sample T-Test. We passed in two lists containing the price
+        volatilities for each stock one day after every day of high social media mentions for both Twitter
+        and Reddit. Separating the two platforms ensured the data would be independent for the accuracy of
+        our test. After plotting the samples on histograms, it appeared that the distribution of each
+        sample was mostly normal.
+
+        After extracting the volatilities the day after and the day before high levels of social media
+        mentions, we just filtered the day after sample to include the stocks of interest and separated
+        the Reddit points from Twitter. The biggest challenge was ensuring the stock tickers matched across
+        Reddit, Twitter, and Yahoo (where we collected the stock price volatility from). This meant renaming
+        some of the columns in our panda dataframes and dropping any values that returned null.
+
+    What is your interpretation of the results? Do you accept or deny the hypothesis, or are you satisfied
+    with your prediction accuracy? For prediction projects, we expect you to argue why you got the
+    accuracy/success metric you have. Intuitively, how do you react to the results? Are you confident
+    in the results?
+
+        Our test returned the following results, “T-Statistic: 0.448, p-value: 0.657.” This rejected our
+        hypothesis, suggesting there is no statistical significance between the stock price volatility the
+        day after high social media mentions for “Blue Chip Companies” on Reddit and those on Twitter.
+
+        The accuracy of this model is somewhat questionable. Although both samples appear to have mostly
+        normal distributions once plotted on histograms, the samples themselves are rather small. Isolating
+        our hypothesis to three company stocks limited the size of our data substantially. Collecting more
+        days of data would have helped mitigate this effect; however, the Twitter and Reddit stock mention
+        data we pulled from limited us to two defined time periods.
+
+        Intuitively, it could make sense that there is no difference between the two social media platforms.
+        They are both used by millions of people across the globe and both host online discussions and trends
+        that could possibly influence investment trends amongst users. However, considering Twitter’s larger
+        scale and global dominance, it would also make sense for there to be a difference between the two
+        platforms.
+
+        We are fairly confident that neither Twitter nor Reddit had a larger impact on stock market price
+        volatility.  It is very challenging to predict market movements and we did not expect users of
+        each of these sites to anticipate future volatility.  We used thousands of posts so we are confident
+        in our results.
+
+Machine Learning Writeup
+    Linear Regression
+    Why did you use this statistical test or ML algorithm? Which other tests did you consider or evaluate?
+    What metric(s) did you use to measure success or failure, and why did you use it? What challenges did
+    you face evaluating the model? Did you have to clean or restructure your data?
+
+        The initial idea behind this project was being able to develop an understanding between the
+        relationship that exists between the frequency in which a company is mentioned on social media
+        and its respective stock performance. As part of our Machine Learning component of the project
+        we thought it would be interesting to design a model that would potentially predict the price
+        volatility of a stock by observing the number of mentions on Twitter and Reddit the day before.
+        We knew because we would be predicting a value using the analysis of a relationship between two
+        variables, we would want to use some sort of regression. Since tweets or reddit mentions and stock
+        price volatility are two independent and continuous variables (stock price volatility and normalized
+        Twitter/Reddit mentions) we decided a Linear Regression would fit our model best.
+        We considered a logistic regression but we did not have enough variables to run it.
+
+        We used mean squared error between the training and testing datasets as well as the r-squared value
+        to evaluate the model. We used mean squared error because it gave us an idea of how bad our
+        regression was at estimating the data between the training and the test set. We used the r-squared
+        value to determine if there was any relationship between variances of number of mentions and
+        volatility.
+
+        A challenge we faced was determining that we had to drop the Reddit dataset for the regression
+        because there were too many outliers in the dataset, namely GME volatility being over 70 percent
+        on some days and there being a lot of zero values. Another challenge we faced was our poor
+        results. Our linear regression had high mean-squared error and low r-squared results, which was
+        disappointing as we wanted to find a relationship between number of mentions and forward volatility.
+
+        In order to run the regression, we had to clean and restructure the data. We normalized the number
+        of mentions between 0 and 1 because the amount stocks were talked about on twitter varied a lot by
+        stock, and we did not want this to skew the regression. We also had to restructure our data in
+        order to match the day forward volatility to a stock on a specific day. This turned out to be more
+        complicated than expected due to the different formatting of the yahoo price dataset and the
+        twitter/reddit number of mentions dataset that didn’t permit us to use a join.
+
+    What is your interpretation of the results? Do you accept or deny the hypothesis, or are you satisfied
+    with your prediction accuracy? For prediction projects, we expect you to argue why you got the
+    accuracy/success metric you have. Intuitively, how do you react to the results? Are you confident in
+    the results?
+
+        Our results were a 1.46 MSE on the training set, 1.71 MSE on the test set, and a r-squared value of
+        0.0005. Looking at these results along with the graph of the linear regression with the data points,
+        it shows that that there basically is not a relationship between # of mentions and volatility one day
+        later. In the graph of data points, you can see that the points are widely distributed, so a linear
+        regression without a lot of error is impossible.
+
+        We find the results not entirely surprising, as stock market behavior can be influenced by numerous
+        factors that may not be reflected in social media mentions alone. If we were able to find a statistically
+        significant relationship between the number of mentions and the stock volatility, there would be money
+        to be made off of it in the markets, and usually the market is pretty efficient so we would have been
+        surprised if that was the case.
+
+        We are not that confident in our results due to issues we found with our data. To improve the accuracy
+        and reliability of the analysis, some possible solutions could include expanding the dataset by
+        collecting data across larger time periods and incorporating sentiment analysis of the posts on Reddit
+        and Twitter. Additionally, we could consider including other social media platforms or alternative data
+        sources that could provide more comprehensive insights into the relationship between social media
+        mentions and stock price volatility.
+
+K-Means
+    Why did you use this statistical test or ML algorithm? Which other tests did you consider or evaluate?
+    What metric(s) did you use to measure success or failure, and why did you use it? What challenges did
+    you face evaluating the model? Did you have to clean or restructure your data?
+
+        We used the K-means algorithm because we wanted to identify potential patterns/relationships of number
+        of social media mentions, volatility, stock trade volume, and what it indicates about the market
+        capitalization of the stock. We considered using some form of classifier instead of the k-means
+        algorithm, but we eventually decided k-means would be the best way to go about it.
+
+        We compared the five clusters given by k-means to the five clusters of points given by grouping by
+        market cap and we looked at how similar these graphs were. They were decently similar, and we found
+        that the groupings were both mostly on the z-axis, which was daily volume. This shows that daily
+        volume and market cap have a pretty strong relationship Although this is something that is pretty
+        obvious; as companies get bigger more share volume will be traded each day, we didn’t initially know
+        this relationship so it was cool that it was illustrated to us through k-means. We were challenged
+        a little bit in evaluating the k-means result because it is so subjective, comparing the two graphs.
+
+        We had to do some pretty substantial restructuring of the data, we had to pull new daily volume
+        data for each stock which we did not initially have. Similar to the linear regression, due to the
+        nature of the format of this data it was hard to join it with our other dataset.
+
+    What is your interpretation of the results? Do you accept or deny the hypothesis, or are you satisfied
+    with your prediction accuracy? For prediction projects, we expect you to argue why you got the
+    accuracy/success metric you have. Intuitively, how do you react to the results? Are you confident in
+    the results?
+
+    The results of k-means are more subjective than the hypothesis tests and linear regression.
+    After consulting with the professor we determined that there was no specific method to validate
+    our result other than visual inspection.  We saw that the graphs looked fairly similar, and the
+    groupings were mostly along the z-axis, which uncovered a relationship between daily volume and market
+    capitalization. We are confident in the results we got because we cleaned and structured the data
+    properly. However, we wish we could have gotten data for more stocks to have a larger amount of
+    different market caps shown in the data.
+
+Results Questions
+    Did you find the results corresponded with your initial belief in the data? If yes/no, why do you
+    think this was the case?
+
+        As far as the hypothesis tests, we were somewhat surprised by the statistical significance of our
+        second claim and lack thereof for hypothesis three. While the discrepancies in our expectations and
+        results might be a result of misunderstanding the relationship between social media and stock
+        performance, we believe it is likely due to the data we collected. Considering the size of our data
+        samples and the short time span in which they were collected, we do not believe highly accurate
+        test results could have been achieved.
+
+    Do you believe the tools for analysis that you chose were appropriate? If yes/no, why or what method
+    could have been used?
+
+        For the hypotheses, we believe we made adequate use of two sample and paired T-Tests in order to
+        compare the different means in our data samples. We were initially contemplating using a Chi-Squared
+        independence test, but because our data is numerical we remained with the t-tests.
+
+        The Linear Regression was an appropriate choice as well, considering the nature of this project.
+        Predicting volatility of stock prices is a pertinent topic of discussion among investors, so
+        regressing volatility on social media mentions is an appropriate and interesting use of this
+        statistical tool. Moreover, the linear model fits best with the two variables of number of stock
+        mentions and associated volatility level.
+
+        We also believe that K-Means Clustering was an appropriate choice of analysis for our second
+        machine learning component. We aimed to observe whether patterns existed in the nature of
+        companies, particularly market value, and their stock price response to social media mentions.
+        This algorithm is effective in identifying underlying groups in data via clustering, so it seemed
+        like an adequate choice.
+
+    Was the data adequate for your analysis? If not, what aspects of the data were problematic and how could
+    you have remedied that?
+
+        Overall, our data was adequate for our analysis.  We drew from databases with over 50,000 Reddit posts
+        and 900,000 tweets specifically mentioning stocks.  Next we aggregated our posts and tweets based off
+        of stock mentions per day with over 10,000 usable data points for our analysis.  Our idea to merge
+        tweets by day allowed us to see the number of mentions fluctuate over the course of the year and
+        record days with especially high activity.  The data was enough for this assignment, but if we were
+        to continue this study on a larger scale we might want to gather more data across different timescales
+        and look into other forms of social media such as Instagram and Facebook posts.

@@ -1,0 +1,107 @@
+Tech Report
+
+How many data points there are:
+    Our data includes four databases: Yahoo Stock Data for 2021, Reddit posts with the number of mentions
+    for 2021, Yahoo Stock Data for 2020, and Twitter posts with the number of mentions for 2020.
+
+    The Yahoo Stock Data for 2020 contains records for 69 different days in 2020 for 27 stocks, resulting
+    in a total of 1863 data points. For each date and stock, the percent change per day is measured.
+
+    Our other database for 2020 counts the number of stock mentions from 923,673 Twitter posts. The database
+    contains records for 77 different days in 2020 for each stock mentioned in the Yahoo Stock Data for 2020
+    database, resulting in a total of 2079 data points. For each date and stock, the number of mentions is recorded.
+
+    The Yahoo Stock Data for 2021 contains records for 141 different days in 2021 for 21 stocks, resulting
+    in a total of 2961 data points. For each date and stock, the percent change per day is measured.
+
+    Our other database for 2021 counts the number of stock mentions from 53,188 Reddit posts. The database
+    contains records for 177 different days in 2021 for each stock mentioned in the Yahoo Stock Data for
+    2021 database, resulting in a total of 3717 data points. For each date and stock, the number of mentions
+    is recorded.
+
+    In total, we have 10,620 data points: 3,942 for 2020 and 6,678 for 2021. Although the data points
+    are not evenly split between the two years, this should not affect our results as the two groups are
+    being analyzed independently of each other. We believe that the data we have collected is sufficient to
+    analyze trends in the stock market.
+
+Identifying Attributes:
+    Dates: 2020 and 2021
+    Stocks:
+    Yahoo Stock Data for 2020: $GME, $AAL, $AAPL, $AMD, $APHA, $BILI, $CLOV, $DKNG, $ECOR, $FB, $INO, $JD, $MSFT, $MVIS, $NAKD, $PLUG, $SNDL, $TLRY, $TSLA, $WKHS, $ZM
+    Yahoo Stock Data for 2021: $MSFT, REAL, $AAPL, $AMZN, $FB, $BBRK.B, $GOOG, $JNJ, $JPM, $V, $PG, $MA, $INTC, $UNH, $BAC, $T, $HD, $XOM, $DIS, $VZ, $KO, $MRK, $CMCSA, $CVX, $PEP, $PFE, $SPY
+    Metrics for each date and stock
+        The percent change per day is measured for the Yahoo Stock Data
+        The number of mentions is recorded for the Twitter and Reddit posts.
+
+Where the data is from:
+    Our stock data is from the Yahoo Finance API and can be accessed at this link:
+        http://finance.yahoo.com/q/pr?s=MSFT.
+    Our Twitter data
+        Our Twitter data was collected from a database that can be accessed at the below website:
+        https://ieee-dataport.org/open-access/stock-market-tweets-data
+    Our Reddit data
+        We downloaded this database which had scraped all posts off of the Reddit thread Wall Street
+        Bets in the year 2021. This database can be found in our raw_databases directory of our GitHub repo.
+    These sources are reputable because they come websites hosting many respected databases.  We were not able
+    to scrape directly from Twitter or Reddit because of scraping rules, but these databases were the next best
+    possible source of data.
+
+    Our cleaned and sampled data is aggregated from over 1 million tweets and 50 thousand Reddit comments. We
+    generated these samples by aggregating mentioned stock tickers per day over the course of two years.  This is a
+    large number of samples, but in now way representative of the hundreds of million tweets and millions of Reddit
+    posts on the internet.  There is likely to be sampling bias becasue we are only monitoring a 2 year period and
+    one Reddit thread.
+
+    One thing that we kept in mind, is we didn't want to store any data from personal Reddit or Twitter users.  Even
+    though these people had published their opinions and thoughts to the open web, we did not store any identifying
+    information on them or the content of their posts.  Instead we aggregated the number of tweets and Reddit posts
+    on particular days.  In this way, we do not have to worry about keeping people's sensitive data.
+
+
+Data Cleanliness:
+    We know that our data is clean because we didn’t use the raw data from the databases, we had
+    a mechanism to clean the data. Since the data for the reddit posts and the twitter posts did
+    not contain which stocks were mentioned in each data point, we had to create a script that would
+    create columns whose values depended on whether or not the text contained the stock. After doing this,
+    we summed along each stock column for each day to get the number of times each stock was mentioned
+    each day.  Since we did this mechanism, and we are only using the true values from the sum, our data
+    is clean because it would have to be in order to satisfy the conditions to be true. When we were reading
+    in the twitter database, the .csv file had missing values for certain lines. This caused the
+    pd.read_csv() function to error, and we had to set the argument error_bad_lines to false to get rid
+    of these missing values. This did not affect the end result though because we had many more data points
+    to take its place.
+
+    The ticker SPY was pulled in the twitter database as a variety of different tickers, so those columns
+    had to be combined to get the number of SPY mentions per day. Besides that, there were no duplicates.
+    The data is skewed towards more popular tickers, as they get more mentions. $SPY got the most mentions
+    in the twitter dataset, and $GME got the most mentions in the reddit dataset. The max/min mentions for
+    SPY were 4238/576 and the max/min mentions for GME were 4676/0. In the context of our analysis, these
+    are neither outliers or skewed data because we are analyzing each stock individually, not considering the
+    relationships between stocks. There are no data type issues. We had to throw some of the data away. For some
+    of the tickers in the Reddit database, the name of the ticker was a very common combination of letters, so
+    when we searched for the ticker in the strings of posts, it would register as appearing in an artificially
+    large amount of them. Since the data on mentions for these stocks were not accurate, we had to throw them away.
+    This will not affect the analyses/conclusions because we still have a multitude of other stocks we can look at.
+
+Challenges and Changes to Analysis:
+    A challenge we had was determining whether or not the number of stock mentions was right or if it was
+    occurring because the stock ticker was a common combination of letters. We had to go through all of
+    the stocks individually and assess whether the number of mentions made sense, given the popularity of
+    the stock and the names of the tickers. In doing our data analysis, it became apparent to us that doing
+    sentiment analysis on all of the text from all of the tweets/reddit posts would not be feasible. This
+    affected our analysis because we were originally going to use the posts as a signal of the stock going
+    up or down using sentiment analysis, but now since we can’t use sentiment analysis, we are just going to
+    look at tweet/post volume and how that affects the volatility of a stock (up or down)
+
+Hypotheses:
+    1) When stocks are mentioned more than usual on social media sites, the stock price will experience higher
+        volatility in the following days.
+    2) There is a positive correlation between the number of stock mentions on social media sites and
+        volatility of the stock.
+    3) There will be a greater correlation between number of stock mentions and volatility for stocks under
+        a market cap of $20 billion.
+
+Machine learning component:
+    We will use a linear regression and a logistic regression as our two machine learning methods in this
+    project. For both of these regressions, we assign the independent variable as the number of stock mentions
+    and our dependent variable as the volatility of the stock 3 days later or in the range of the next week.
